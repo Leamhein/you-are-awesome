@@ -32,7 +32,22 @@ const asyncIncrementor = () => {
 };
 
 const createIncrementer = () => {
-  return {}
+  var obj = {
+    count: 0, //counter
+    next() { //method next fot iterable
+      return {
+        value: ++this.count
+      };
+    },
+    [Symbol.iterator]() { //make the object iterable
+      return {
+        next: function() {
+          return obj.next();
+        }
+      };
+    }
+  };
+  return obj;
 };
 
 // return same argument not earlier than in one second, and not later, than in two
@@ -50,7 +65,6 @@ const getDeepPropertiesCount = () => {
 const createSerializedObject = () => {return null};
 
 const toBuffer = () => {
-  ///////////
 };
 
 const sortByProto = (array) => {
