@@ -1,6 +1,6 @@
 // DO WHATEVER YOU WANT HERE
 
-const createEnumerableProperty = (n) => {return n};
+const createEnumerableProperty = function () {return arguments};
 
 const createNotEnumerableProperty = (n) => {
   Object.defineProperty(Object.prototype, n, {
@@ -8,13 +8,13 @@ const createNotEnumerableProperty = (n) => {
     get: () => Function.prototype.n, //getter
     set: (n) => Function.prototype.n = n}); //setter
     return n;
-  };
+};
 
 
 const createProtoMagicObject = () => {
   function magic () {}; // typeOf func != typeOf obj
   magic.prototype = magic.__proto__; //make it equal
-return magic;
+  return magic;
 };
 
 var counter = 0;
@@ -26,9 +26,10 @@ const incrementor = () => {
 
 var count = 0;
 const asyncIncrementor = () => {
-  asyncIncrementor.valueOf = () => {return count}; //if need return number
-  count++;
-  return asyncIncrementor; //return function
+  let promise = new Promise (function (resolve) { //create new promise
+    setTimeout (resolve (count++), 0); //promice => fulfilled
+  });
+  return count;
 };
 
 const createIncrementer = () => {
@@ -52,14 +53,25 @@ const createIncrementer = () => {
 
 // return same argument not earlier than in one second, and not later, than in two
 const returnBackInSecond = (n) => {
-  return new Promise(function (resolve) { //make new promice
+  return new Promise(function (resolve) { //create new promice
     setTimeout(function () {
-      resolve(n); //work if there is no errors
-    }, 1001);
-  })
+      resolve(n); //promise => fulfilled
+    }, 1001); //timeout 1,001 sec
+  });
 };
-const getDeepPropertiesCount = () => {
-  ////////////
+
+const getDeepPropertiesCount = function () {
+  var count = 0;
+  function counter () {
+    for (var key in arguments[0]) {
+      if (arguments[0][key] !== undefined && typeof arguments[0][key] === 'object'){ //if there is an object in object
+        count++; //count +1
+        counter(arguments[0][key]); //recursion
+      };
+    };
+  };
+  counter(arguments[0]); //start counter
+  return count;
 };
 
 const createSerializedObject = () => {return null};
@@ -67,8 +79,8 @@ const createSerializedObject = () => {return null};
 const toBuffer = () => {
 };
 
-const sortByProto = (array) => {
-  var arr = array;
+const sortByProto = function () {
+  var arr = arguments[0];
   arr = arr.sort(function (a, b) {
     return Object.getPrototypeOf(a) - Object.getPrototypeOf(b); //sort by parents
   });
